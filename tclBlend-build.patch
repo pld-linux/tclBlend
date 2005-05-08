@@ -1,0 +1,71 @@
+--- tclBlend1.2.6/unix/configure.in.orig	2000-04-28 19:26:33.000000000 +0200
++++ tclBlend1.2.6/unix/configure.in	2005-05-08 12:32:12.023949416 +0200
+@@ -627,7 +627,8 @@
+ 	    if test ! -d $JAVA_INCLUDE/native_threads; then
+                 AC_MSG_ERROR(['$JAVA_INCLUDE/native_threads'
+ does not exist. You must install the JDK Native Threads Pack to use tclBlend.
+-See http://www.sgi.com/Products/Evaluation/#jdk.])
++See http://www.sgi.com/Products/Evaluation/#jdk.
++])
+             fi
+ 
+             JAVA_ARCH_INCLUDE=$JAVA_INCLUDE/irix
+@@ -886,7 +887,20 @@
+         if test ! -d $DIR; then
+             MSG="jdk directory $DIR does not exist"
+             echo $MSG >&5
+-            AC_MSG_ERROR([$MSG])
++            AC_MSG_WARN([$MSG])
++        else
++            if test "$JAVA_ARCH_GREEN_LIB" != ""; then
++                JAVA_ARCH_GREEN_RUNTIME_LIBS=$JAVA_ARCH_GREEN_RUNTIME_LIBS:$DIR
++            fi
++
++            JAVA_ARCH_NATIVE_RUNTIME_LIBS=$JAVA_ARCH_NATIVE_RUNTIME_LIBS:$DIR
++        fi
++
++        DIR=$JAVA_DIR/jre/$ARCH_LIB/client
++        if test ! -d $DIR; then
++            MSG="jdk directory $DIR does not exist"
++            echo $MSG >&5
++            AC_MSG_WARN([$MSG])
+         else
+             if test "$JAVA_ARCH_GREEN_LIB" != ""; then
+                 JAVA_ARCH_GREEN_RUNTIME_LIBS=$JAVA_ARCH_GREEN_RUNTIME_LIBS:$DIR
+@@ -955,7 +969,7 @@
+     AC_HEADER_STDC
+     # generic/javaCmd.c calls memset
+     AC_CHECK_FUNCS(memset)
+-
++    AC_CHECK_HEADER([unistd.h])
+ fi
+ 
+ # End of tclblend's java platform detection section 
+@@ -1278,7 +1292,7 @@
+   # Check to make sure that tclsh has been built by looking for the
+   # tclsh executable in the TCL_BIN_DIR directory.
+ 
+-  if test ! -x $TCL_BIN_DIR/tclsh; then
++  if test ! -x $TCL_BIN_DIR/../bin/tclsh; then
+     AC_MSG_ERROR([Tcl was configued in $TCL_BIN_DIR, but it has not been built, please build it and run configure again.])
+   fi
+ 
+@@ -1291,7 +1305,7 @@
+   SHLIB_PATH=$TCL_BIN_DIR:$SHLIB_PATH
+   export SHLIB_PATH
+ 
+-  TCLSH_LOC=$TCL_BIN_DIR/tclsh
++  TCLSH_LOC=$TCL_BIN_DIR/../bin/tclsh
+   rm -f tcl_version.tcl
+   echo 'puts [[expr {[info tclversion] >= 8.0}]] ; exit 0' > tcl_version.tcl
+   if test "`$TCLSH_LOC tcl_version.tcl 2>&5`" = "1"; then
+--- tclBlend1.2.6/unix/Makefile.in.orig	2000-04-30 01:39:26.000000000 +0200
++++ tclBlend1.2.6/unix/Makefile.in	2005-05-07 23:51:44.578375480 +0200
+@@ -84,6 +84,7 @@
+ CC			= @CC@
+ CC_OBJ_FLAG		= -c
+ CFLAGS			= @TCL_CFLAGS@
++CDEFS			= @DEFS@
+ SHLIB_CFLAGS		= @SHLIB_CFLAGS@
+ SHLIB_LD		= @SHLIB_LD@
+ SHLIB_LD_LIBS		= @SHLIB_LD_LIBS@
