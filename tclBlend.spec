@@ -1,24 +1,22 @@
-#
-# Conditional build:
-%bcond_with	javac	# use javac instead of jikes+kaffe
-#
 Summary:	Tcl Blend - Java access for Tcl system
 Summary(pl):	Tcl Blend - dostêp do Javy w systemie Tcl
 Name:		tclBlend
-Version:	1.2.6
+Version:	1.4.0
 Release:	0.1
 License:	BSD
 Group:		Development/Languages/Tcl
-Source0:	ftp://ftp.tcl.tk/pub/tcl/java/%{name}%{version}.tar.gz
-# Source0-md5:	96ba50d8c9af7c37caae60b1b77c9650
-Patch0:		%{name}-build.patch
+Source0:	http://dl.sourceforge.net/tcljava/%{name}%{version}.tar.gz
+# Source0-md5:	c88f84fb6a72af4c951648295f0e02f0
 URL:		http://www.tcl.tk/software/java/
-BuildRequires:	autoconf
-%{?with_javac:BuildRequires:	jdk}
-%{!?with_javac:BuildRequires:	jikes}
-%{!?with_javac:BuildRequires:	kaffe-devel}
+BuildRequires:	autoconf >= 2.50
+BuildRequires:	jdk >= 1.4
+BuildRequires:	jpackage-utils
+BuildRequires:	sed >= 4.0
 BuildRequires:	tcl-devel >= 8.0
+BuildRequires:	tcl-thread
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		specflags	-fno-strict-aliasing
 
 %description
 Tcl Blend provides two new capabilities to the Tcl system. First, Tcl
@@ -45,26 +43,30 @@ udostêpnienia dynamicznego interfejsu do Javy.
 
 %prep
 %setup -q -n %{name}%{version}
-%patch0 -p1
+
+sed -i -e 's,TCLSH_LOC=\$TCL_BIN_DIR/tclsh,TCLSH_LOC=/usr/bin/tclsh,' tcljava.m4
 
 %build
-cd unix
+unset CLASSPATH || :
 %{__autoconf}
 %configure \
-	%{?with_javac:--without-jikes} \
-	--with-tcl=/usr/lib
-%{__make} \
-	%{?with_javac:JAVAC_FLAGS="-g -source 1.4"}
+	--with-jdk="%{java_home}" \
+	--with-tcl=/usr/lib \
+	--with-thread=$(echo %{_libdir}/thread2.*)
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} -C unix install \
+%{__make} install \
 	TCLSH=/usr/bin/tclsh \
+	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	BIN_INSTALL_DIR=$RPM_BUILD_ROOT%{_bindir} \
 	LIB_INSTALL_DIR=$RPM_BUILD_ROOT%{_libdir} \
 	XP_LIB_INSTALL_DIR=$RPM_BUILD_ROOT%{_javadir} \
-	TCLBLEND_LIBRARY=$RPM_BUILD_ROOT%{_prefix}/lib/tclblend
+	TCLBLEND_LIBRARY=$RPM_BUILD_ROOT%{_prefix}/lib/tclblend \
+	TCLJAVA_INSTALL_DIR=$RPM_BUILD_ROOT%{_libdir}/tcljava%{version} \
+	XP_TCLJAVA_INSTALL_DIR=$RPM_BUILD_ROOT%{_prefix}/lib/tcljava%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -74,8 +76,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc README changes.txt diffs.txt known_issues.txt license.*
 %attr(755,root,root) %{_bindir}/jtclsh
 %attr(755,root,root) %{_bindir}/jwish
-%attr(755,root,root) %{_libdir}/libtclblend.so
-%{_prefix}/lib/tclblend
-%{_javadir}/tclblend.jar
-# XXX: dup with jacl?
-%{_javadir}/tcljava.jar
+%dir %{_libdir}/tcljava%{version}
+%attr(755,root,root) %{_libdir}/tcljava%{version}/libtclblend.so
+%if "%{_libdir}" != "%{_prefix}/lib"
+%dir %{_prefix}/lib/tcljava%{version}
+%endif
+%{_prefix}/lib/tcljava%{version}/pkgIndex.tcl
+%{_prefix}/lib/tcljava%{version}/tclblend.jar
+%{_prefix}/lib/tcljava%{version}/tclblendsrc.jar
+%{_prefix}/lib/tcljava%{version}/tcljava.jar
+%{_prefix}/lib/tcljava%{version}/tcljavasrc.jar
+%{_prefix}/lib/xputils
