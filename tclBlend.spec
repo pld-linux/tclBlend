@@ -1,5 +1,5 @@
 Summary:	Tcl Blend - Java access for Tcl system
-Summary(pl.UTF-8):   Tcl Blend - dostęp do Javy w systemie Tcl
+Summary(pl.UTF-8):	Tcl Blend - dostęp do Javy w systemie Tcl
 Name:		tclBlend
 Version:	1.4.0
 Release:	0.1
