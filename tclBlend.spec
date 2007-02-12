@@ -1,5 +1,5 @@
 Summary:	Tcl Blend - Java access for Tcl system
-Summary(pl):	Tcl Blend - dostêp do Javy w systemie Tcl
+Summary(pl.UTF-8):   Tcl Blend - dostÄ™p do Javy w systemie Tcl
 Name:		tclBlend
 Version:	1.4.0
 Release:	0.1
@@ -30,16 +30,16 @@ to invoke methods and access fields on arbitrary objects. Tcl Blend
 takes advantage of these capabilities to provide a dynamic interface
 to Java.
 
-%description -l pl
-Tcl Blend wnosi dwie nowe mo¿liwo¶ci do systemu Tcl. Po pierwsze
-dostarcza klasy Javy udostêpniaj±ce kluczowe fragmenty interfejsów,
-które s± dostêpne pisz±cym rozszerzenia aktualnie u¿ywaj±cym C. Przy
-u¿yciu tych klas autorzy rozszerzeñ mog± tworzyæ nowe polecenia dla
-interpretera Tcl. Ponadto Tcl Blend udostêpnia polecenia umo¿liwiaj±ce
-pisz±cym skrypty bezpo¶rednie manipulowanie na obiektach Javy bez
-konieczno¶ci pisania ¿adnego kodu w Javie. Klasy odzwierciedlaj±ce w
-Javie umo¿liwiaj± wywo³ywanie metod z tymi mo¿liwo¶ciami w celu
-udostêpnienia dynamicznego interfejsu do Javy.
+%description -l pl.UTF-8
+Tcl Blend wnosi dwie nowe moÅ¼liwoÅ›ci do systemu Tcl. Po pierwsze
+dostarcza klasy Javy udostÄ™pniajÄ…ce kluczowe fragmenty interfejsÃ³w,
+ktÃ³re sÄ… dostÄ™pne piszÄ…cym rozszerzenia aktualnie uÅ¼ywajÄ…cym C. Przy
+uÅ¼yciu tych klas autorzy rozszerzeÅ„ mogÄ… tworzyÄ‡ nowe polecenia dla
+interpretera Tcl. Ponadto Tcl Blend udostÄ™pnia polecenia umoÅ¼liwiajÄ…ce
+piszÄ…cym skrypty bezpoÅ›rednie manipulowanie na obiektach Javy bez
+koniecznoÅ›ci pisania Å¼adnego kodu w Javie. Klasy odzwierciedlajÄ…ce w
+Javie umoÅ¼liwiajÄ… wywoÅ‚ywanie metod z tymi moÅ¼liwoÅ›ciami w celu
+udostÄ™pnienia dynamicznego interfejsu do Javy.
 
 %prep
 %setup -q -n %{name}%{version}
